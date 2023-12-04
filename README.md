@@ -1,30 +1,67 @@
-# React + TypeScript + Vite
+# Video Player Component
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This React component, `VideoPlayer`, is designed to integrate the Video.js library into your React application for seamless video playback. The component allows you to customize the player with various options, including autoplay and video sources. Additionally, it incorporates a custom seek bar with interactive segments, enhancing the user experience.
 
-Currently, two official plugins are available:
+## Usage
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. **Installation:**
+   Ensure you have the necessary dependencies installed in your project:
 
-## Expanding the ESLint configuration
+   ```bash
+   npm install video.js react
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+2. **Component Integration:**
+   Import and use the `VideoPlayer` component in your React application. Pass the required props, such as `options`, `onReady`, and `segments`.
 
-- Configure the top-level `parserOptions` property like this:
+   ```jsx
+   import VideoPlayer from './path-to/VideoPlayer';
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+   const YourComponent = () => {
+     const videoPlayerOptions = {
+       // Define your Video.js player options here
+     };
+
+     const handlePlayerReady = (player) => {
+       // Handle player ready event
+     };
+
+     const segmentData = [
+       // Define your segment data as an array of SegmentDto objects
+     ];
+
+     return (
+       <VideoPlayer
+         options={videoPlayerOptions}
+         onReady={handlePlayerReady}
+         segments={segmentData}
+       />
+     );
+   };
+   ```
+
+## Features
+
+- **Custom Seek Bar:**
+  The component includes a custom seek bar with interactive segments, allowing users to hover over segments and click to seek to specific points in the video.
+
+- **Segment Card Generation:**
+  Each segment is associated with a dynamically generated card, displaying relevant information when the user hovers over the segment.
+
+- **Segment Hover Effects:**
+  Smooth opacity transitions and card display/hide effects provide a visually appealing experience when interacting with the custom seek bar.
+
+## Dependencies
+
+- `react`
+- `video.js`
+
+## Note
+
+Ensure that you have the required stylesheets for Video.js by including:
+
+```jsx
+import 'video.js/dist/video-js.css';
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+For detailed documentation on Video.js options and features, refer to the [Video.js Documentation](https://docs.videojs.com/).
