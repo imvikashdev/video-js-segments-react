@@ -36,13 +36,25 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
   function generateCard(segmentDetails: SegmentDto) {
     const card = document.createElement('div');
     card.id = `segment-card-${segmentDetails.id}`;
-    card.classList.add('segment-card');
+    card.classList.add(
+      ...['hidden', 'absolute', 'pb-[10px]', 'opacity-100', 'bottom-2'],
+    );
 
     const imageWrapper = document.createElement('div');
-    imageWrapper.classList.add('image-wrapper');
+    imageWrapper.classList.add(
+      ...['h-[70px]', 'flex', 'flex-row', 'justify-center', 'items-center'],
+    );
 
     const thumbnail = document.createElement('img');
-    thumbnail.classList.add('image');
+    thumbnail.classList.add(
+      ...[
+        'border-[#ffffff5f]',
+        'border-solid',
+        'border-2',
+        'rounded-xl',
+        'h-full',
+      ],
+    );
     thumbnail.src = segmentDetails.thumbnail;
     thumbnail.alt = segmentDetails.description;
 
@@ -50,7 +62,9 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
 
     const title = document.createElement('span');
     title.innerText = segmentDetails.description;
-    title.classList.add('title');
+    title.classList.add(
+      ...['text-center', 'block', 'mt-[7px]', 'text-sm', 'text-white'],
+    );
 
     card.appendChild(imageWrapper);
     card.appendChild(title);
@@ -62,6 +76,20 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
     const segmentWrapper = document.createElement('div');
     segmentWrapper.id = 'segment-wrapper';
 
+    segmentWrapper?.classList.add(
+      ...[
+        'flex',
+        'flex-row',
+        'px-[1px]',
+        'bg-black',
+        'gap-[2px]',
+        'absolute',
+        'w-full',
+        'h-full',
+        'z-[1]',
+      ],
+    );
+
     // looping over segments array to create track segments
     segments.forEach((e) => {
       const segment = document.createElement('div');
@@ -71,7 +99,9 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
       }
 
       segment.id = `segment-section-${e.id}`;
-      segment.classList.add('segment-section');
+      segment.classList.add(
+        ...['opacity-80', 'segment-section', 'h-full', 'bg-red-500'],
+      );
       segment.setAttribute('data-segmentstart', e.start.toString());
 
       //generating custom card for segment
@@ -114,6 +144,7 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
 
   const onMouseLeave = (customSeekbar: HTMLDivElement) => {
     const segmentWrapper = document.getElementById('segment-wrapper');
+
     if (segmentWrapper) {
       customSeekbar.removeChild(segmentWrapper);
     }
@@ -133,6 +164,7 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
     if (!playerRef.current) {
       const videoElement = document.createElement('video-js');
       videoElement.classList.add('vjs-big-play-centered');
+
       if (videoRef.current) {
         videoRef.current.appendChild(videoElement);
 
@@ -150,6 +182,14 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
           player.controlBar as any
         ).progressControl.seekBar.el();
         progressControl.id = 'custom-seekbar';
+        progressControl.classList.add(
+          ...[
+            'hover:w-full',
+            'hover:h-2',
+            'hover:bg-[#33333399]',
+            'hover:cursor-pointer',
+          ],
+        );
 
         // showing segments only when progress bar is hovered
         progressControl.addEventListener('mouseenter', () =>
@@ -176,7 +216,6 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
   useEffect(() => {
     const player = playerRef.current;
 
-    console.log();
     return () => {
       if (player && !player.isDisposed()) {
         player.dispose();
@@ -187,7 +226,11 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
 
   return (
     <div data-vjs-player>
-      <div id="custom-video-player" ref={videoRef} />
+      <div
+        id="custom-video-player"
+        className="relative w-[640px] mx-auto my-5"
+        ref={videoRef}
+      />
     </div>
   );
 };
