@@ -1,4 +1,4 @@
 
 .video-js .vjs-play-progress:before {
-  z-index: 3 !important;
+  z-index: 4 !important;
 }

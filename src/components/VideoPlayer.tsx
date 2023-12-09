@@ -72,7 +72,35 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
     return card;
   }
 
-  const onMouseEnter = (customSeekbar: HTMLDivElement) => {
+  const removeLoaderStyles = () => {
+    const loaderBar = document.querySelector('.vjs-load-progress');
+    const progressBar = document.querySelector('.vjs-play-progress');
+    loaderBar?.classList.remove('z-[2]');
+    progressBar?.classList.remove('z-[3]', 'opacity-60');
+  };
+
+  const rebuildLoaderStyles = () => {
+    const loaderBar = document.querySelector('.vjs-load-progress');
+    const progressBar = document.querySelector('.vjs-play-progress');
+    loaderBar?.classList.add('z-[2]');
+    progressBar?.classList.add('z-[3]', 'opacity-60');
+  };
+
+  const generateSegments = (customSeekbar: HTMLDivElement) => {
+    const progressControl = document.querySelector('.vjs-progress-control');
+
+    const loaderBar = document.querySelector('.vjs-load-progress');
+    const progressBar = document.querySelector('.vjs-play-progress');
+    loaderBar?.classList.add('z-[2]', 'opacity-60');
+    progressBar?.classList.add('z-[3]', 'opacity-60');
+
+    progressControl?.addEventListener('mouseenter', () => {
+      removeLoaderStyles();
+    });
+    progressControl?.addEventListener('mouseleave', () => {
+      rebuildLoaderStyles();
+    });
+
     const segmentWrapper = document.createElement('div');
     segmentWrapper.id = 'segment-wrapper';
 
@@ -142,14 +170,6 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
     customSeekbar.appendChild(segmentWrapper);
   };
 
-  const onMouseLeave = (customSeekbar: HTMLDivElement) => {
-    const segmentWrapper = document.getElementById('segment-wrapper');
-
-    if (segmentWrapper) {
-      customSeekbar.removeChild(segmentWrapper);
-    }
-  };
-
   const onClick = (e: MouseEvent, customSeekbar: HTMLDivElement) => {
     const boundingRect = customSeekbar.getBoundingClientRect();
     const clickX = e.clientX - boundingRect.left;
@@ -191,14 +211,18 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
           ],
         );
 
-        // showing segments only when progress bar is hovered
-        progressControl.addEventListener('mouseenter', () =>
-          onMouseEnter(progressControl),
-        );
+        player.on('loadedmetadata', () => {
+          generateSegments(progressControl);
+        });
 
-        progressControl.addEventListener('mouseleave', () =>
-          onMouseLeave(progressControl),
-        );
+        // showing segments only when progress bar is hovered
+        // progressControl.addEventListener('mouseenter', () =>
+        //   onMouseEnter(progressControl),
+        // );
+
+        // progressControl.addEventListener('mouseleave', () =>
+        //   onMouseLeave(progressControl),
+        // );
 
         // listening for segement currentTime
         progressControl.addEventListener('click', (e: MouseEvent) =>
@@ -217,7 +241,7 @@ const VideoPlayer = ({ options, onReady, segments }: Props) => {
     const player = playerRef.current;
 
     return () => {
-      if (player && !player.isDisposed()) {
+      if (player?.isDisposed && !player.isDisposed()) {
         player.dispose();
         playerRef.current = null;
       }
